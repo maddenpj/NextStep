@@ -1,0 +1,19 @@
+{
+    "name": "patrick/next-step",
+    "description": "Tinder for Recovery Sponsors",
+    "type": "project",
+    "require": {
+        "php": "^7.1"
+    },
+    "autoload": {
+      "psr-4": {
+        "NextStep\\": "src/NextStep/"
+      }
+    },
+    "authors": [
+        {
+            "name": "Patrick Madden",
+            "email": "maddenpj@gmail.com"
+        }
+    ]
+}
