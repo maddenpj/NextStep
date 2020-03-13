@@ -2,8 +2,12 @@
 
 namespace NextStep\Model;
 
+use NextStep\Util\ImmutableProperties;
+
 
 class Sponsor {
+
+    use ImmutableProperties;
 
     protected $id;
     protected $soberTime;
