@@ -8,6 +8,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 
 $app = AppFactory::create();
+$connstr = "pgsql:host=localhost;dbname=nextstep";
 
 $app->get('/', function (Request $request, Response $response, $args) {
     $response->getBody()->write("Hello world!");
