@@ -13,8 +13,8 @@ class Geo {
     protected $longitude;
 
     public function __construct(
-        $latitude,
-        $longitude
+        float $latitude,
+        float $longitude
     ) {
         $this->latitude = $latitude;
         $this->longitude = $longitude;
