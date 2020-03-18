@@ -23,6 +23,7 @@ $app->get('/', function (Request $request, Response $response, $args) use ($ss) 
 
 $app->get('/distance', function (Request $request, Response $response, $args) use ($ss) {
 
+    echo '<pre>';
     $g = new Geo(33.6560, -117.8994);
     $qs = $request->getQueryParams();
 
@@ -30,10 +31,16 @@ $app->get('/distance', function (Request $request, Response $response, $args) us
         $g = new Geo($qs['lat'], $qs['long']);
     }
 
-    echo '<pre>';
+    $sponsors = $ss->fetchByDistance($g, $qs['radius']);
+
+    foreach ($sponsors as &$s) {
+        $s['daysSober'] = $s['sponsor']->getDaysSober();
+    }
+
+
 
     print_r($request->getQueryParams());
-    print_r($ss->fetchByDistance($g, $qs['radius']));
+    print_r($sponsors);
 
     echo '</pre>';
     // $response->getBody()->write($res);

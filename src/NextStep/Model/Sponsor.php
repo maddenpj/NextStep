@@ -36,4 +36,9 @@ class Sponsor {
         $this->phoneTime = $phoneTime;
     }
 
+    public function getDaysSober() {
+        $n = new \DateTime();
+        return $n->diff(new \DateTime($this->soberDate))->format("%a");
+    }
+
 }
