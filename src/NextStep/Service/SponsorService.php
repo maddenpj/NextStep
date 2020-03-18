@@ -54,7 +54,12 @@ class SponsorService {
         return new Sponsor(
             $row['id'],
             new Geo($row['latitude'], $row['longitude']),
-            $row['name']
+            $row['name'],
+            $row['soberdate'],
+            $row['sponsee_count'],
+            $row['rideshare'],
+            $row['avg_phone_time']
+
         );
     }
 

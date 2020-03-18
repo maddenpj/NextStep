@@ -13,14 +13,27 @@ class Sponsor {
     protected $geo;
     protected $name;
 
+    protected $soberDate;
+    protected $sponseeCount;
+    protected $rideShare; // Not really a php boolean
+    protected $phoneTime;
+
     public function __construct(
         $id,
         $geo,
-        $name
+        $name,
+        $soberDate,
+        $sponseeCount,
+        $rideShare,
+        $phoneTime
     ) {
         $this->id = $id;
         $this->geo = $geo;
         $this->name = $name;
+        $this->soberDate = $soberDate;
+        $this->sponseeCount = $sponseeCount;
+        $this->rideShare = $rideShare;
+        $this->phoneTime = $phoneTime;
     }
 
 }
