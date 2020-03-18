@@ -33,7 +33,7 @@ $app->get('/distance', function (Request $request, Response $response, $args) us
     echo '<pre>';
 
     print_r($request->getQueryParams());
-    print_r($ss->fetchByDistance($g));
+    print_r($ss->fetchByDistance($g, $qs['radius']));
 
     echo '</pre>';
     // $response->getBody()->write($res);

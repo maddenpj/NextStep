@@ -11,16 +11,16 @@ class Sponsor {
 
     protected $id;
     protected $geo;
-    protected $soberTime;
+    protected $name;
 
     public function __construct(
         $id,
         $geo,
-        $soberTime
+        $name
     ) {
         $this->id = $id;
         $this->geo = $geo;
-        $this->soberTime = $soberTime;
+        $this->name = $name;
     }
 
 }
