@@ -38,7 +38,6 @@ $app->get('/distance', function (Request $request, Response $response, $args) us
     }
 
 
-
     print_r($request->getQueryParams());
     print_r($sponsors);
 

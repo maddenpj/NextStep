@@ -29,6 +29,14 @@ class SponsorService {
         }
     }
 
+    /**************************
+     * Other Crucial Filters
+     * - soberdate
+     * - sponsee_count
+     * - rideshare
+     * - avg_phone_time
+     *************************/
+
     public function fetchByDistance($geo, $max_distance = null) {
         // Should use bind values?
         $sql  = 'select *, ( point(a.longitude, a.latitude)<@>point('. $geo->longitude . ',' . $geo->latitude .') ) as distance ';
@@ -37,6 +45,7 @@ class SponsorService {
         if (isset($max_distance)) {
             $sql = 'select * from (' . $sql . ') as x where distance < '.$max_distance;
         }
+        // Other filters can go here
 
         $sql .= ' order by distance';
         $st = $this->pdo->prepare($sql);
