@@ -46,6 +46,7 @@ class Sponsor implements \JsonSerializable {
             'id' => $this->id,
             'name' => $this->name,
             'soberDate' => $this->soberDate,
+            'soberTime' => $this->getDaysSober(),
             'sponseeCount' => $this->sponseeCount,
             'rideShare' => $this->rideShare,
             'phoneTime' => $this->phoneTime,
