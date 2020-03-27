@@ -37,7 +37,7 @@ class SponsorService {
      * - avg_phone_time
      *************************/
 
-    public function fetchByDistance($geo, $max_distance = null) {
+    public function fetchByDistance($geo, $max_distance = null, $filters = array()) {
         // Should use bind values?
         $sql  = 'select *, ( point(a.longitude, a.latitude)<@>point('. $geo->longitude . ',' . $geo->latitude .') ) as distance ';
         $sql .= 'from sponsors a';

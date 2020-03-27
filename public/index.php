@@ -16,8 +16,9 @@ $pdo = new \PDO($connstr);
 $ss = new SponsorService($pdo);
 
 $app->get('/', function (Request $request, Response $response, $args) use ($ss) {
-    $res = '<pre>'. print_r($ss->fetchAll(), true) . '</pre>';
-    $response->getBody()->write($res);
+    $sponsors = $ss->fetchAll();
+    $response = $response->withHeader('Content-Type', 'application/json');
+    $response->getBody()->write(json_encode($sponsors, JSON_PRETTY_PRINT));
     return $response;
 });
 

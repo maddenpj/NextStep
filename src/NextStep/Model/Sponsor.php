@@ -5,7 +5,7 @@ namespace NextStep\Model;
 use NextStep\Util\ImmutableProperties;
 
 
-class Sponsor {
+class Sponsor implements \JsonSerializable {
 
     use ImmutableProperties;
 
@@ -39,6 +39,18 @@ class Sponsor {
     public function getDaysSober() {
         $n = new \DateTime();
         return $n->diff(new \DateTime($this->soberDate))->format("%a");
+    }
+
+    public function jsonSerialize() {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'soberDate' => $this->soberDate,
+            'sponseeCount' => $this->sponseeCount,
+            'rideShare' => $this->rideShare,
+            'phoneTime' => $this->phoneTime,
+            'geo' => $this->geo
+        ];
     }
 
 }

@@ -5,7 +5,7 @@ namespace NextStep\Model;
 use NextStep\Util\ImmutableProperties;
 
 
-class Geo {
+class Geo implements \JsonSerializable {
 
     use ImmutableProperties;
 
@@ -18,6 +18,13 @@ class Geo {
     ) {
         $this->latitude = $latitude;
         $this->longitude = $longitude;
+    }
+
+    public function jsonSerialize () {
+        return [
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude
+        ];
     }
 
 }
