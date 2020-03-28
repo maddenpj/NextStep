@@ -79,7 +79,11 @@ class SponsorService {
         $st->bindValue(':id', $sponsor->id);
 
         if($st->execute()) {
-            $sponsor->addImages($st->fetchAll(\PDO::FETCH_ASSOC));
+            $imgs = array_map(function ($x) {
+                return $x['filepath'];
+            }, $st->fetchAll(\PDO::FETCH_ASSOC));
+
+            $sponsor->addImages($imgs);
         }
         return $sponsor;
     }
