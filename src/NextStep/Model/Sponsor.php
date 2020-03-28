@@ -47,6 +47,7 @@ class Sponsor implements \JsonSerializable {
         $this->images = array_merge($this->images, $imgs);
     }
 
+    // Probably should scrub 'id'
     public function jsonSerialize() {
         return [
             'id' => $this->id,

@@ -16,6 +16,8 @@ class SponsorService {
 
     /**************************
      * uses fetchAll pretty stupidly for now
+     *
+     *  Also should 'LIMIT' everything eventually
      *************************/
 
     public function fetchAll() {
