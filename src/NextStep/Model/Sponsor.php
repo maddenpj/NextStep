@@ -18,6 +18,8 @@ class Sponsor implements \JsonSerializable {
     protected $rideShare; // Not really a php boolean
     protected $phoneTime;
 
+    protected $images = [];
+
     public function __construct(
         $id,
         $geo,

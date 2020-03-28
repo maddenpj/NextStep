@@ -19,7 +19,8 @@ class SponsorService {
      *************************/
 
     public function fetchAll() {
-        $sql = 'SELECT * FROM sponsors';
+        // $sql = 'SELECT * FROM sponsors';
+        $sql = 'SELECT * FROM sponsors ORDER BY id';
         $st = $this->pdo->prepare($sql);
 
         if($st->execute()) {
