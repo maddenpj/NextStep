@@ -43,6 +43,10 @@ class Sponsor implements \JsonSerializable {
         return $n->diff(new \DateTime($this->soberDate))->format("%a");
     }
 
+    public function addImages(array $imgs) {
+        $this->images = array_merge($this->images, $imgs);
+    }
+
     public function jsonSerialize() {
         return [
             'id' => $this->id,
@@ -52,7 +56,8 @@ class Sponsor implements \JsonSerializable {
             'sponseeCount' => $this->sponseeCount,
             'rideShare' => $this->rideShare,
             'phoneTime' => $this->phoneTime,
-            'geo' => $this->geo
+            'geo' => $this->geo,
+            'images' => $this->images
         ];
     }
 

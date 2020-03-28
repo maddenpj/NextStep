@@ -60,8 +60,9 @@ class SponsorService {
         }
     }
 
+    // This is gonna be really stupid but fetching images here
     public function fromRow($row) {
-        return new Sponsor(
+        $sponsor = new Sponsor(
             $row['id'],
             new Geo($row['latitude'], $row['longitude']),
             $row['name'],
@@ -71,6 +72,16 @@ class SponsorService {
             $row['avg_phone_time']
 
         );
+
+
+        // can order by 'popularity' later like tinder
+        $st = $this->pdo->prepare('select * from pictures where sponsor_id = :id');
+        $st->bindValue(':id', $sponsor->id);
+
+        if($st->execute()) {
+            $sponsor->addImages($st->fetchAll(\PDO::FETCH_ASSOC));
+        }
+        return $sponsor;
     }
 
 
