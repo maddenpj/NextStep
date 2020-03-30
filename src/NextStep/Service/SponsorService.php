@@ -82,7 +82,8 @@ class SponsorService {
 
         if($st->execute()) {
             $imgs = array_map(function ($x) {
-                return $x['filepath'];
+                // Shitty way to convert path to URL
+                return "http://" . $_SERVER['HTTP_HOST'] . "/static/" . $x['filepath'];
             }, $st->fetchAll(\PDO::FETCH_ASSOC));
 
             $sponsor->addImages($imgs);

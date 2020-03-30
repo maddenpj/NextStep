@@ -18,7 +18,8 @@ $ss = new SponsorService($pdo);
 $app->get('/', function (Request $request, Response $response, $args) use ($ss) {
     $sponsors = $ss->fetchAll();
     $response = $response->withHeader('Content-Type', 'application/json');
-    $response->getBody()->write(json_encode($sponsors, JSON_PRETTY_PRINT));
+    $json = json_encode($sponsors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    $response->getBody()->write($json);
     return $response;
 });
 
@@ -45,6 +46,11 @@ $app->get('/distance', function (Request $request, Response $response, $args) us
     echo '</pre>';
     // $response->getBody()->write($res);
     return $response;
+});
+
+$app->get('/phpinfo', function ($req, $res, $args) {
+    phpinfo();
+    return $res;
 });
 
 $app->run();
