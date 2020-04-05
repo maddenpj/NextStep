@@ -10,15 +10,26 @@ use NextStep\Service\SponsorService;
 require __DIR__ . '/../vendor/autoload.php';
 
 
-$app = AppFactory::create();
+/////////////////////////////////////////
+// Stuff to be moved into better config
+/////////////////////////////////////////
 $connstr = "pgsql:host=localhost;dbname=nextstep";
+// $jsonSettings = JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+
+
+////////////////////
+// App Setup Stuff
+////////////////////
+$app = AppFactory::create();
+
 $pdo = new \PDO($connstr);
 $ss = new SponsorService($pdo);
 
 $app->get('/', function (Request $request, Response $response, $args) use ($ss) {
     $sponsors = $ss->fetchAll();
     $response = $response->withHeader('Content-Type', 'application/json');
-    $json = json_encode($sponsors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    $jsonSettings = JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+    $json = json_encode($sponsors, $jsonSettings);
     $response->getBody()->write($json);
     return $response;
 });
