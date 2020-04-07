@@ -1,5 +1,6 @@
 <?php
 
+use DI\Container;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
@@ -13,19 +14,28 @@ require __DIR__ . '/../vendor/autoload.php';
 /////////////////////////////////////////
 // Stuff to be moved into better config
 /////////////////////////////////////////
-$connstr = "pgsql:host=localhost;dbname=nextstep";
+$container = new Container();
 // $jsonSettings = JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
 
+$connstr = "pgsql:host=localhost;dbname=nextstep";
+$pdo = new \PDO($connstr);
+// $ss = new SponsorService($pdo);
+
+$container->set('SponsorService', function () use ($pdo) {
+    return new SponsorService($pdo);
+});
 
 ////////////////////
 // App Setup Stuff
 ////////////////////
+
+
+AppFactory::setContainer($container);
 $app = AppFactory::create();
 
-$pdo = new \PDO($connstr);
-$ss = new SponsorService($pdo);
 
-$app->get('/', function (Request $request, Response $response, $args) use ($ss) {
+$app->get('/', function (Request $request, Response $response, $args) {
+    $ss = $this->get('SponsorService');
     $sponsors = $ss->fetchAll();
     $response = $response->withHeader('Content-Type', 'application/json');
     $jsonSettings = JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
