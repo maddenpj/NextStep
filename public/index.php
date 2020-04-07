@@ -38,7 +38,8 @@ $container->set('SponsorService', function () use ($pdo) {
 
 AppFactory::setContainer($container);
 $app = AppFactory::create();
-
+$app->addRoutingMiddleware();
+$errorMiddleware = $app->addErrorMiddleware(true, true, true);
 
 $app->get('/', function (Request $request, Response $response, $args) {
     $ss = $this->get('SponsorService');
