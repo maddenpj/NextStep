@@ -14,6 +14,15 @@ class SponsorService {
         $this->pdo = $pdo;
     }
 
+    public function fetch($id) {
+        $st = $this->pdo->prepare('SELECT * FROM sponsors WHERE id = :id');
+        $st->bindValue(':id', $id);
+
+        if($st->execute()) {
+            return $this->fromRow($st->fetch(\PDO::FETCH_ASSOC));
+        }
+    }
+
     /**************************
      * uses fetchAll pretty stupidly for now
      *

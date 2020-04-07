@@ -21,6 +21,12 @@ $connstr = "pgsql:host=localhost;dbname=nextstep";
 $pdo = new \PDO($connstr);
 // $ss = new SponsorService($pdo);
 
+$container->set('config', function () {
+    return [
+        'json.settings' => JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+    ];
+});
+
 $container->set('SponsorService', function () use ($pdo) {
     return new SponsorService($pdo);
 });
@@ -38,10 +44,21 @@ $app->get('/', function (Request $request, Response $response, $args) {
     $ss = $this->get('SponsorService');
     $sponsors = $ss->fetchAll();
     $response = $response->withHeader('Content-Type', 'application/json');
-    $jsonSettings = JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+    $jsonSettings = $this->get('config')['json.settings'];
     $json = json_encode($sponsors, $jsonSettings);
     $response->getBody()->write($json);
     return $response;
+});
+
+// Should use groups eventually?
+$app->get('/user/{id}', function (Request $req, Response $res, $args) {
+    $ss = $this->get('SponsorService');
+    $sponsor = $ss->fetch($args['id']);
+    $res = $res->withHeader('Content-Type', 'application/json');
+    $jsonSettings = $this->get('config')['json.settings'];
+    $json = json_encode($sponsor, $jsonSettings);
+    $res->getBody()->write($json);
+    return $res;
 });
 
 $app->get('/distance', function (Request $request, Response $response, $args) use ($ss) {
