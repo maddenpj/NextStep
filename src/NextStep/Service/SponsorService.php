@@ -10,7 +10,7 @@ class SponsorService {
 
     protected $pdo;
 
-    public function __construct($pdo) {
+    public function __construct(\PDO $pdo) {
         $this->pdo = $pdo;
     }
 
@@ -20,6 +20,15 @@ class SponsorService {
 
         if($st->execute()) {
             return $this->fromRow($st->fetch(\PDO::FETCH_ASSOC));
+        }
+    }
+
+    public function getLikes(Sponsor $sponsor) {
+        $st = $this->pdo->prepare('SELECT * FROM likes WHERE base_id = :id');
+        $st->bindValue(':id', $sponsor->id);
+
+        if($st->execute()) {
+            return $st->fetchAll(\PDO::FETCH_ASSOC);
         }
     }
 

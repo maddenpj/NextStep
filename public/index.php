@@ -62,6 +62,17 @@ $app->get('/user/{id}', function (Request $req, Response $res, $args) {
     return $res;
 });
 
+$app->get('/user/{id}/likes', function (Request $req, Response $res, $args) {
+    $res = $res->withHeader('Content-Type', 'application/json');
+    $jsonSettings = $this->get('config')['json.settings'];
+    $ss = $this->get('SponsorService');
+    $sponsor = $ss->fetch($args['id']);
+    $likes = $ss->getLikes($sponsor);
+    $json = json_encode($likes, $jsonSettings);
+    $res->getBody()->write($json);
+    return $res;
+});
+
 $app->get('/distance', function (Request $request, Response $response, $args) use ($ss) {
 
     echo '<pre>';
