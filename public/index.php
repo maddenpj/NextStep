@@ -37,6 +37,7 @@ $container->set('SponsorService', function () use ($pdo) {
 ////////////////////
 AppFactory::setContainer($container);
 $app = AppFactory::create();
+$app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
 $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 
@@ -72,6 +73,17 @@ $app->get('/user/{id}/likes', function (Request $req, Response $res, $args) {
     $likes = $ss->getLikes($sponsor);
     $json = json_encode($likes, $jsonSettings);
     $res->getBody()->write($json);
+    return $res;
+});
+
+$app->post('/user/{id}/likes', function (Request $req, Response $res, $args) {
+    $data = $req->getParsedBody();
+    $ss = $this->get('SponsorService');
+    $sponsor = $ss->fetch($args['id']);
+    if (isset($data['liked'])) {
+        $lid = $ss->addLike($sponsor, $data['liked']);
+        $res->getBody()->write(var_export($lid, true));
+    }
     return $res;
 });
 

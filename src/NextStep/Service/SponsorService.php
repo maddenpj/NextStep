@@ -23,6 +23,11 @@ class SponsorService {
         }
     }
 
+    /************************
+     * These maybe should be in Sponsor::class
+     * But then that'd couple pdo to sponsor :/
+     ***********************/
+
     public function getLikes(Sponsor $sponsor) {
         $st = $this->pdo->prepare('SELECT * FROM likes WHERE base_id = :id');
         $st->bindValue(':id', $sponsor->id);
@@ -30,6 +35,14 @@ class SponsorService {
         if($st->execute()) {
             return $st->fetchAll(\PDO::FETCH_ASSOC);
         }
+    }
+
+    public function addLike(Sponsor $user, $likedId) {
+        $sql = 'INSERT INTO likes (base_id, liked_id) VALUES ';
+        $sql .= "({$user->id}, {$likedId}) RETURNING id"; // Not using bindValues
+        $st = $this->pdo->prepare($sql);
+        $st->execute();
+        return $st->fetch()["id"];
     }
 
     /**************************
