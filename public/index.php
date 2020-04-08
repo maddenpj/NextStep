@@ -1,6 +1,7 @@
 <?php
 
 use DI\Container;
+use DI\ContainerBuilder;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
@@ -14,18 +15,18 @@ require __DIR__ . '/../vendor/autoload.php';
 /////////////////////////////////////////
 // Stuff to be moved into better config
 /////////////////////////////////////////
-$container = new Container();
-// $jsonSettings = JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+$containerBuilder = new ContainerBuilder();
 
+
+$containerBuilder->addDefinitions([
+    'config' => [
+        'json.settings' => JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+    ]
+]);
+
+$container = $containerBuilder->build();
 $connstr = "pgsql:host=localhost;dbname=nextstep";
 $pdo = new \PDO($connstr);
-// $ss = new SponsorService($pdo);
-
-$container->set('config', function () {
-    return [
-        'json.settings' => JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-    ];
-});
 
 $container->set('SponsorService', function () use ($pdo) {
     return new SponsorService($pdo);
@@ -34,13 +35,14 @@ $container->set('SponsorService', function () use ($pdo) {
 ////////////////////
 // App Setup Stuff
 ////////////////////
-
-
 AppFactory::setContainer($container);
 $app = AppFactory::create();
 $app->addRoutingMiddleware();
 $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 
+//////////////////
+// Routes
+/////////////////
 $app->get('/', function (Request $request, Response $response, $args) {
     $ss = $this->get('SponsorService');
     $sponsors = $ss->fetchAll();
@@ -104,10 +106,5 @@ $app->get('/phpinfo', function ($req, $res, $args) {
 });
 
 $app->run();
-
-
-// Show all information, defaults to INFO_ALL
-// phpinfo();
-
 
 ?>
