@@ -87,6 +87,16 @@ $app->post('/user/{id}/likes', function (Request $req, Response $res, $args) {
     return $res;
 });
 
+$app->post('/user/create', function (Request $req, Response $res, $args) {
+    $data = $req->getParsedBody();
+    // $res->getBody()->write(var_export($data, true));
+    echo '<pre>';
+    print_r($data);
+    echo '</pre>';
+    return $res;
+});
+
+
 $app->get('/distance', function (Request $request, Response $response, $args) use ($ss) {
 
     echo '<pre>';
