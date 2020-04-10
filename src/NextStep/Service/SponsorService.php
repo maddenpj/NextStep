@@ -122,5 +122,20 @@ class SponsorService {
         return $sponsor;
     }
 
+    public function insert($arr) {
+        $sql = <<<SQL
+        INSERT INTO sponsors (name, latitude, longitude, soberdate, sponsee_count, rideshare, avg_phone_time)
+        VALUES (:name, :lat, :long, :soberDate, :sponseeCount, :rideShare, :phoneTime)
+        RETURNING id
+SQL;
+        if (empty($arr['rideShare'])) {
+            $arr['rideShare'] = 0;
+        }
+
+        $st = $this->pdo->prepare($sql);
+        if ($st->execute($arr)) {
+            return $st->fetch();
+        }
+    }
 
 }

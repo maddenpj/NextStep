@@ -92,6 +92,8 @@ $app->post('/user/create', function (Request $req, Response $res, $args) {
     // $res->getBody()->write(var_export($data, true));
     echo '<pre>';
     print_r($data);
+    $id = $this->get('SponsorService')->insert($data);
+    print_r($id);
     echo '</pre>';
     return $res;
 });
