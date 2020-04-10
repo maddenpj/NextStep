@@ -1,21 +1,56 @@
 <html>
 
+  <head>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
+  </head>
+
+  <style>
+    body {
+      margin-left: 50px;
+    }
+  </style>
+
   <body>
 
-    <form action="/user/create" method="POST">
+    <form action="/user/create" method="POST" class="pure-form pure-form-aligned">
+      <fieldset>
 
-      <label>Name: <input name="name"></label><br/><br/>
-      <label>Sober Date: <input name="soberDate"></label><br/><br/>
-      <label>Latitude: <input name="lat"></label><br/><br/>
-      <label>Longitude: <input name="long"></label><br/><br/>
-      <label>Sponsee Count: <input name="sponseeCount"></label><br/><br/>
-      <label>Phone Time: <input name="phoneTime"></label><br/><br/>
+        <legend>Create Sponsor</legend>
 
-      <label for="rideShare">Ride Share:</label>
-      <input type="checkbox" name="rideShare" value="1">
-      <br/><br/>
+        <div class="pure-control-group">
+          <label for="name">Name: </label>
+          <input name="name">
+        </div>
+        <div class="pure-control-group">
+          <label for="soberDate">Sober Date: </label>
+          <input name="soberDate">
+        </div>
+        <div class="pure-control-group">
+          <label for="lat">Latitude: </label>
+          <input name="lat">
+        </div>
+        <div class="pure-control-group">
+          <label>Longitude: </label>
+          <input name="long">
+        </div>
+        <div class="pure-control-group">
+          <label>Sponsee Count: </label>
+          <input name="sponseeCount">
+        </div>
+        <div class="pure-control-group">
+          <label>Phone Time: </label>
+          <input name="phoneTime">
+        </div>
+        <div class="pure-control-group">
+          <label for="rideShare" class="pure-checkbox">Ride Share: </label>
+          <input type="checkbox" name="rideShare" value="1">
+        </div>
 
-      <input type="submit">
+        <div class="pure-controls">
+          <input type="submit" class="pure-button pure-button-primary">
+        </div>
+
+      </fieldset>
     </form>
 
   </body>
