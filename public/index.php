@@ -90,10 +90,16 @@ $app->post('/user/{id}/likes', function (Request $req, Response $res, $args) {
 $app->post('/user/create', function (Request $req, Response $res, $args) {
     $data = $req->getParsedBody();
     // $res->getBody()->write(var_export($data, true));
+    $ss = $this->get('SponsorService');
     echo '<pre>';
     print_r($data);
-    $id = $this->get('SponsorService')->insert($data);
-    print_r($id);
+    $id = $ss->insert($data);
+    $sponsor = $ss->fetch($id);
+    if (!empty($data['image'])) {
+        $sponsor = $ss->insertImage($sponsor, $data['image']);
+    }
+
+    print_r($sponsor);
     echo '</pre>';
     return $res;
 });

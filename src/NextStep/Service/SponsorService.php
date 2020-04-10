@@ -132,9 +132,24 @@ SQL;
             $arr['rideShare'] = 0;
         }
 
+        if (isset($arr['image'])) {
+            unset($arr['image']);
+        }
+
         $st = $this->pdo->prepare($sql);
         if ($st->execute($arr)) {
-            return $st->fetch();
+            return $st->fetch()[0];
+        }
+    }
+
+    public function insertImage(Sponsor $s, $img) {
+        $st = $this->pdo->prepare('INSERT INTO pictures (sponsor_id, filepath) VALUES (:sid, :img)');
+        $st->bindValue(':sid', $s->id);
+        $st->bindValue(':img', $img);
+
+        if ($st->execute()) {
+            $s->addImages([$img]);
+            return $s;
         }
     }
 
