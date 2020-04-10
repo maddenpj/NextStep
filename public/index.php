@@ -27,7 +27,7 @@ $containerBuilder->addDefinitions([
 $container = $containerBuilder->build();
 $connstr = "pgsql:host=localhost;dbname=nextstep";
 $pdo = new \PDO($connstr);
-
+// Shouldn't container auto-wire this
 $container->set('SponsorService', function () use ($pdo) {
     return new SponsorService($pdo);
 });
@@ -48,6 +48,7 @@ $app->get('/', function (Request $request, Response $response, $args) {
     $ss = $this->get('SponsorService');
     $sponsors = $ss->fetchAll();
     $response = $response->withHeader('Content-Type', 'application/json');
+    // Should pull out into a json encoder service
     $jsonSettings = $this->get('config')['json.settings'];
     $json = json_encode($sponsors, $jsonSettings);
     $response->getBody()->write($json);
