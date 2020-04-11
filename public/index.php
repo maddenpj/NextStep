@@ -26,7 +26,9 @@ $containerBuilder->addDefinitions([
 
 $container = $containerBuilder->build();
 $connstr = "pgsql:host=localhost;dbname=nextstep";
-$pdo = new \PDO($connstr);
+$pdo = new \PDO($connstr, null, null, array(
+    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
+));
 // Shouldn't container auto-wire this
 $container->set('SponsorService', function () use ($pdo) {
     return new SponsorService($pdo);

@@ -19,7 +19,7 @@ class SponsorService {
         $st->bindValue(':id', $id);
 
         if($st->execute()) {
-            return $this->fromRow($st->fetch(\PDO::FETCH_ASSOC));
+            return $this->fromRow($st->fetch());
         }
     }
 
@@ -28,12 +28,14 @@ class SponsorService {
      * But then that'd couple pdo to sponsor :/
      ***********************/
 
-    public function getLikes(Sponsor $sponsor) {
-        $st = $this->pdo->prepare('SELECT * FROM likes WHERE base_id = :id');
+    public function getLikes(Sponsor $sponsor, $likes = true) {
+        $table = $likes ? 'likes' : 'dislikes';
+        $sql = "SELECT * FROM {$table} WHERE base_id = :id";
+        $st = $this->pdo->prepare($sql);
         $st->bindValue(':id', $sponsor->id);
 
         if($st->execute()) {
-            return $st->fetchAll(\PDO::FETCH_ASSOC);
+            return $st->fetchAll();
         }
     }
 
@@ -59,7 +61,7 @@ class SponsorService {
         if($st->execute()) {
             return array_map(function ($x) {
                 return $this->fromRow($x);
-            }, $st->fetchAll(\PDO::FETCH_ASSOC));
+            }, $st->fetchAll());
         }
     }
 
@@ -89,7 +91,7 @@ class SponsorService {
                     'sponsor' => $this->fromRow($x),
                     'distance' => $x['distance']
                 ];
-            }, $st->fetchAll(\PDO::FETCH_ASSOC));
+            }, $st->fetchAll());
         }
     }
 
@@ -115,7 +117,7 @@ class SponsorService {
             $imgs = array_map(function ($x) {
                 // Shitty way to convert path to URL
                 return "http://" . $_SERVER['HTTP_HOST'] . "/static/" . $x['filepath'];
-            }, $st->fetchAll(\PDO::FETCH_ASSOC));
+            }, $st->fetchAll());
 
             $sponsor->addImages($imgs);
         }
