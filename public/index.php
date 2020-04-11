@@ -90,6 +90,33 @@ $app->post('/user/{id}/likes', function (Request $req, Response $res, $args) {
     return $res;
 });
 
+$app->group('/user/{id}/dislikes', function ($group) {
+
+    $group->get('', function (Request $req, Response $res, $args) {
+        $res = $res->withHeader('Content-Type', 'application/json');
+        $jsonSettings = $this->get('config')['json.settings'];
+        $ss = $this->get('SponsorService');
+        $sponsor = $ss->fetch($args['id']);
+        $likes = $ss->getLikes($sponsor, false);
+        $json = json_encode($likes, $jsonSettings);
+        $res->getBody()->write($json);
+        return $res;
+    });
+
+    $group->post('', function (Request $req, Response $res, $args) {
+        $data = $req->getParsedBody();
+        $ss = $this->get('SponsorService');
+        $sponsor = $ss->fetch($args['id']);
+        if (isset($data['disliked'])) {
+            $lid = $ss->addLike($sponsor, $data['disliked'], false);
+            $res->getBody()->write(var_export($lid, true));
+        }
+        return $res;
+    });
+
+});
+
+
 $app->post('/user/create', function (Request $req, Response $res, $args) {
     $data = $req->getParsedBody();
     // $res->getBody()->write(var_export($data, true));

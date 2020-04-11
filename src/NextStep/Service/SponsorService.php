@@ -26,6 +26,7 @@ class SponsorService {
     /************************
      * These maybe should be in Sponsor::class
      * But then that'd couple pdo to sponsor :/
+     * Also boolean flag.. maybe stupid
      ***********************/
 
     public function getLikes(Sponsor $sponsor, $likes = true) {
@@ -39,8 +40,10 @@ class SponsorService {
         }
     }
 
-    public function addLike(Sponsor $user, $likedId) {
-        $sql = 'INSERT INTO likes (base_id, liked_id) VALUES ';
+    public function addLike(Sponsor $user, $likedId, $likes=true) {
+        $table = $likes ? 'likes' : 'dislikes';
+        $typeId = $likes ? 'liked_id' : 'disliked_id';
+        $sql = "INSERT INTO {$table} (base_id, {$typeId}) VALUES ";
         $sql .= "({$user->id}, {$likedId}) RETURNING id"; // Not using bindValues
         $st = $this->pdo->prepare($sql);
         $st->execute();
@@ -95,6 +98,22 @@ class SponsorService {
         }
     }
 
+    public function fetchImages(Sponsor $sponsor) {
+        // can order by 'popularity' later like tinder
+        $st = $this->pdo->prepare('select * from pictures where sponsor_id = :id');
+        $st->bindValue(':id', $sponsor->id);
+
+        if($st->execute()) {
+            $imgs = array_map(function ($x) {
+                // Shitty way to convert path to URL
+                return "http://" . $_SERVER['HTTP_HOST'] . "/static/" . $x['filepath'];
+            }, $st->fetchAll());
+
+            $sponsor->addImages($imgs);
+            return $sponsor;
+        }
+    }
+
     // This is gonna be really stupid but fetching images here
     public function fromRow($row) {
         $sponsor = new Sponsor(
@@ -108,19 +127,7 @@ class SponsorService {
 
         );
 
-
-        // can order by 'popularity' later like tinder
-        $st = $this->pdo->prepare('select * from pictures where sponsor_id = :id');
-        $st->bindValue(':id', $sponsor->id);
-
-        if($st->execute()) {
-            $imgs = array_map(function ($x) {
-                // Shitty way to convert path to URL
-                return "http://" . $_SERVER['HTTP_HOST'] . "/static/" . $x['filepath'];
-            }, $st->fetchAll());
-
-            $sponsor->addImages($imgs);
-        }
+        $sponsor = $this->fetchImages($sponsor);
         return $sponsor;
     }
 
