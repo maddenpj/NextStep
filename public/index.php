@@ -135,29 +135,23 @@ $app->post('/user/create', function (Request $req, Response $res, $args) {
 });
 
 
-$app->get('/distance', function (Request $request, Response $response, $args) use ($ss) {
-
-    echo '<pre>';
+$app->get('/distance', function (Request $req, Response $res, $args) {
+    // Default lat/long for testing
     $g = new Geo(33.6560, -117.8994);
-    $qs = $request->getQueryParams();
+    $qs = $req->getQueryParams();
 
     if (isset($qs['lat']) && isset($qs['long'])) {
         $g = new Geo($qs['lat'], $qs['long']);
     }
 
+    $ss = $this->get('SponsorService');
     $sponsors = $ss->fetchByDistance($g, $qs['radius']);
 
-    foreach ($sponsors as &$s) {
-        $s['daysSober'] = $s['sponsor']->getDaysSober();
-    }
-
-
-    print_r($request->getQueryParams());
-    print_r($sponsors);
-
-    echo '</pre>';
-    // $response->getBody()->write($res);
-    return $response;
+    $res = $res->withHeader('Content-Type', 'application/json');
+    $jsonSettings = $this->get('config')['json.settings'];
+    $json = json_encode($sponsors, $jsonSettings);
+    $res->getBody()->write($json);
+    return $res;
 });
 
 $app->get('/phpinfo', function ($req, $res, $args) {
