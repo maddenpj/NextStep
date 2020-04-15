@@ -20,23 +20,25 @@ $containerBuilder = new ContainerBuilder();
 
 $containerBuilder->addDefinitions([
     'config' => [
-        'json.settings' => JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-    ]
+        'json.settings' => JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
+        'sql.connection' => "pgsql:host=localhost;dbname=nextstep"
+    ],
+    \PDO::class => function (Container $c) {
+        return new \PDO($c->get('config')['sql.connection'], null, null, array(
+            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
+        ));
+    },
+    'SponsorService' => function (Container $c) {
+        return new SponsorService($c->get(\PDO::class));
+    },
 ]);
 
-$container = $containerBuilder->build();
-$connstr = "pgsql:host=localhost;dbname=nextstep";
-$pdo = new \PDO($connstr, null, null, array(
-    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
-));
-// Shouldn't container auto-wire this
-$container->set('SponsorService', function () use ($pdo) {
-    return new SponsorService($pdo);
-});
 
 ////////////////////
 // App Setup Stuff
 ////////////////////
+
+$container = $containerBuilder->build();
 AppFactory::setContainer($container);
 $app = AppFactory::create();
 $app->addBodyParsingMiddleware();
