@@ -25,12 +25,12 @@ abstract class AbstractLikeService {
         }
     }
 
-    public function insert(Sponsor $s, $id) {
+    public function insert(Sponsor $s, $id): int {
         $sql = "INSERT INTO {$this->getTable()} (base_id, {$this->getIDLabel()}) VALUES ";
         $sql .= "({$s->id}, {$id}) RETURNING id"; // Not using bindValues
         $st = $this->pdo->prepare($sql);
         $st->execute();
-        return $st->fetch()["id"];
+        return $this->pdo->lastInsertId();
     }
 
 }

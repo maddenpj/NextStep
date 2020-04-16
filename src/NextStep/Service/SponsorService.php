@@ -14,7 +14,7 @@ class SponsorService {
         $this->pdo = $pdo;
     }
 
-    public function fetch($id) {
+    public function fetch($id): Sponsor {
         $st = $this->pdo->prepare('SELECT * FROM sponsors WHERE id = :id');
         $st->bindValue(':id', $id);
 
@@ -120,7 +120,7 @@ SQL;
 
         $st = $this->pdo->prepare($sql);
         if ($st->execute($arr)) {
-            return $st->fetch()[0];
+            return $this->pdo->lastInsertId();
         }
     }
 

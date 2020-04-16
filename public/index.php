@@ -53,34 +53,31 @@ $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 $app->get('/', function (Request $request, Response $response, $args) {
     $ss = $this->get('SponsorService');
     $sponsors = $ss->fetchAll();
-    $response = $response->withHeader('Content-Type', 'application/json');
     // Should pull out into a json encoder service
     $jsonSettings = $this->get('config')['json.settings'];
     $json = json_encode($sponsors, $jsonSettings);
     $response->getBody()->write($json);
-    return $response;
+    return $response->withHeader('Content-Type', 'application/json');
 });
 
 // Should use groups eventually?
 $app->get('/user/{id}', function (Request $req, Response $res, $args) {
     $ss = $this->get('SponsorService');
     $sponsor = $ss->fetch($args['id']);
-    $res = $res->withHeader('Content-Type', 'application/json');
     $jsonSettings = $this->get('config')['json.settings'];
     $json = json_encode($sponsor, $jsonSettings);
     $res->getBody()->write($json);
-    return $res;
+    return $res->withHeader('Content-Type', 'application/json');
 });
 
 $app->get('/user/{id}/likes', function (Request $req, Response $res, $args) {
-    $res = $res->withHeader('Content-Type', 'application/json');
     $jsonSettings = $this->get('config')['json.settings'];
     $ss = $this->get('SponsorService');
     $sponsor = $ss->fetch($args['id']);
     $likes = $this->get(LikeService::class)->fetch($sponsor);
     $json = json_encode($likes, $jsonSettings);
     $res->getBody()->write($json);
-    return $res;
+    return $res->withHeader('Content-Type', 'application/json');
 });
 
 $app->post('/user/{id}/likes', function (Request $req, Response $res, $args) {
@@ -91,20 +88,19 @@ $app->post('/user/{id}/likes', function (Request $req, Response $res, $args) {
         $lid = $this->get(LikeService::class)->insert($sponsor, $data['liked']);
         $res->getBody()->write(var_export($lid, true));
     }
-    return $res;
+    return $res->withHeader('Content-Type', 'application/json');
 });
 
 $app->group('/user/{id}/dislikes', function ($group) {
 
     $group->get('', function (Request $req, Response $res, $args) {
-        $res = $res->withHeader('Content-Type', 'application/json');
         $jsonSettings = $this->get('config')['json.settings'];
         $ss = $this->get('SponsorService');
         $sponsor = $ss->fetch($args['id']);
         $likes = $this->get(DislikeService::class)->fetch($sponsor);
         $json = json_encode($likes, $jsonSettings);
         $res->getBody()->write($json);
-        return $res;
+        return $res->withHeader('Content-Type', 'application/json');
     });
 
     $group->post('', function (Request $req, Response $res, $args) {
@@ -151,11 +147,10 @@ $app->get('/distance', function (Request $req, Response $res, $args) {
     $ss = $this->get('SponsorService');
     $sponsors = $ss->fetchByDistance($g, $qs['radius']);
 
-    $res = $res->withHeader('Content-Type', 'application/json');
     $jsonSettings = $this->get('config')['json.settings'];
     $json = json_encode($sponsors, $jsonSettings);
     $res->getBody()->write($json);
-    return $res;
+    return $res->withHeader('Content-Type', 'application/json');
 });
 
 $app->get('/phpinfo', function ($req, $res, $args) {
