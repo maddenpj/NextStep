@@ -23,33 +23,6 @@ class SponsorService {
         }
     }
 
-    /************************
-     * These maybe should be in Sponsor::class
-     * But then that'd couple pdo to sponsor :/
-     * Also boolean flag.. maybe stupid
-     ***********************/
-
-    public function getLikes(Sponsor $sponsor, $likes = true) {
-        $table = $likes ? 'likes' : 'dislikes';
-        $sql = "SELECT * FROM {$table} WHERE base_id = :id";
-        $st = $this->pdo->prepare($sql);
-        $st->bindValue(':id', $sponsor->id);
-
-        if($st->execute()) {
-            return $st->fetchAll();
-        }
-    }
-
-    public function addLike(Sponsor $user, $likedId, $likes=true) {
-        $table = $likes ? 'likes' : 'dislikes';
-        $typeId = $likes ? 'liked_id' : 'disliked_id';
-        $sql = "INSERT INTO {$table} (base_id, {$typeId}) VALUES ";
-        $sql .= "({$user->id}, {$likedId}) RETURNING id"; // Not using bindValues
-        $st = $this->pdo->prepare($sql);
-        $st->execute();
-        return $st->fetch()["id"];
-    }
-
     /**************************
      * uses fetchAll pretty stupidly for now
      *

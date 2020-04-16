@@ -8,6 +8,8 @@ use Slim\Factory\AppFactory;
 
 use NextStep\Model\Geo;
 use NextStep\Service\SponsorService;
+use NextStep\Service\LikeService;
+use NextStep\Service\DislikeService;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -75,7 +77,7 @@ $app->get('/user/{id}/likes', function (Request $req, Response $res, $args) {
     $jsonSettings = $this->get('config')['json.settings'];
     $ss = $this->get('SponsorService');
     $sponsor = $ss->fetch($args['id']);
-    $likes = $ss->getLikes($sponsor);
+    $likes = $this->get(LikeService::class)->fetch($sponsor);
     $json = json_encode($likes, $jsonSettings);
     $res->getBody()->write($json);
     return $res;
@@ -86,7 +88,7 @@ $app->post('/user/{id}/likes', function (Request $req, Response $res, $args) {
     $ss = $this->get('SponsorService');
     $sponsor = $ss->fetch($args['id']);
     if (isset($data['liked'])) {
-        $lid = $ss->addLike($sponsor, $data['liked']);
+        $lid = $this->get(LikeService::class)->insert($sponsor, $data['liked']);
         $res->getBody()->write(var_export($lid, true));
     }
     return $res;
@@ -99,7 +101,7 @@ $app->group('/user/{id}/dislikes', function ($group) {
         $jsonSettings = $this->get('config')['json.settings'];
         $ss = $this->get('SponsorService');
         $sponsor = $ss->fetch($args['id']);
-        $likes = $ss->getLikes($sponsor, false);
+        $likes = $this->get(DislikeService::class)->fetch($sponsor);
         $json = json_encode($likes, $jsonSettings);
         $res->getBody()->write($json);
         return $res;
@@ -110,7 +112,7 @@ $app->group('/user/{id}/dislikes', function ($group) {
         $ss = $this->get('SponsorService');
         $sponsor = $ss->fetch($args['id']);
         if (isset($data['disliked'])) {
-            $lid = $ss->addLike($sponsor, $data['disliked'], false);
+            $lid = $this->get(DislikeService::class)->insert($sponsor, $data['disliked']);
             $res->getBody()->write(var_export($lid, true));
         }
         return $res;
