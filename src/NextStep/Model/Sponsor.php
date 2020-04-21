@@ -18,6 +18,8 @@ class Sponsor implements \JsonSerializable {
     protected $rideShare; // Not really a php boolean
     protected $phoneTime;
 
+    protected $profileData;
+
     protected $images = [];
 
     public function __construct(
@@ -27,7 +29,8 @@ class Sponsor implements \JsonSerializable {
         $soberDate,
         $sponseeCount,
         $rideShare,
-        $phoneTime
+        $phoneTime,
+        $profileData
     ) {
         $this->id = $id;
         $this->geo = $geo;
@@ -36,6 +39,7 @@ class Sponsor implements \JsonSerializable {
         $this->sponseeCount = $sponseeCount;
         $this->rideShare = $rideShare;
         $this->phoneTime = $phoneTime;
+        $this->profileData = $profileData;
     }
 
     public function getDaysSober() {
@@ -58,6 +62,7 @@ class Sponsor implements \JsonSerializable {
             'rideShare' => $this->rideShare,
             'phoneTime' => $this->phoneTime,
             'geo' => $this->geo,
+            'profile' => $this->profileData,
             'images' => $this->images
         ];
     }

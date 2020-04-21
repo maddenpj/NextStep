@@ -96,7 +96,8 @@ class SponsorService {
             $row['soberdate'],
             $row['sponsee_count'],
             $row['rideshare'],
-            $row['avg_phone_time']
+            $row['avg_phone_time'],
+            json_decode($row['profile_data'], true)
 
         );
 
